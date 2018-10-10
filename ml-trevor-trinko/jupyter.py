@@ -169,7 +169,7 @@ trades = trades[trades.pred > 0.5]
 trades = trades.sort_values('entry_time')
 trades['cpl'] = trades.mtm_pl.cumsum()
 test = test.sort_values('entry_time')
-test['cpl'] = test.mtm_pl.cu msum()
+test['cpl'] = test.mtm_pl.cumsum()
 #print('Original PnL - No ML')
 test.plot(x='entry_time',y='cpl',figsize=[12,8])
 #plt.show()
