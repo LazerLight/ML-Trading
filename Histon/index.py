@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import mean_squared_error
+
 
 import datetime
 
@@ -21,6 +24,7 @@ start = datetime.datetime(2010,1,1)
 end = datetime.datetime(2014,3,24)
 ticker = "AAPL"
 f=web.DataReader(ticker,'yahoo',start,end)
+f.Volume = f.Volume.astype(float)
 
 
 '''
@@ -56,8 +60,7 @@ f['NextDayPrice'] = f['Close'].shift(-1)
 f_cleanData = f.copy()
 f_cleanData.dropna(inplace=True)
 
-#print(f_cleandata)
-
+#f_cleanData.to_csv('output', sep='\t', encoding='utf-8')
 
 '''
 ===========================
@@ -89,6 +92,7 @@ regressor.fit(X_train,y_train)
 
 print ("Training set: {} samples".format(X_train.shape[0]))
 print ("Test set: {} samples".format(X_test.shape[0]))
+print(X_test.head())
 
 
 '''
@@ -96,3 +100,29 @@ print ("Test set: {} samples".format(X_test.shape[0]))
 7) Evaluate the Model
 ===========================
 '''
+# Evaluate the performance of our model. The metrics you use is up to you. 
+#Accuracy and Mean Squared Error are shown below.  
+# scores = cross_val_score(regressor, X_test, y_test, cv=10)
+# print ("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() / 2))    
+
+
+# mse = mean_squared_error(y_test, regressor.predict(X_test))
+# print("MSE: %.4f" % mse)
+
+'''
+===========================
+7) Predict
+===========================
+'''
+
+# X=f_cleanData[-1:]
+# print(regressor.predict(X))
+
+from iexfinance.stocks import get_historical_data 
+from datetime import datetime
+
+start = datetime(2017, 1, 1) # starting date: year-month-date
+end = datetime(2018, 1, 1) # ending date: year-month-date
+
+data = get_historical_data('ERIC', start=start, end=end, output_format='pandas') 
+print(data.head())
